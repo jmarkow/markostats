@@ -6,10 +6,10 @@ function [P TEST_STAT PERM_MAX]=markostats_perm_mc(GROUP1,GROUP2,varargin)
 % computes the difference between two groups alone each column, controlling
 % for multiple comparisons via permutation
 
-nperms=1000; % 1e3 recommended for p=.05 5e3 for p=.01
+nperms=500; % 1e3 recommended for p=.05 5e3 for p=.01
 ncomparisons=size(GROUP1,2);
-test_stat=@(GRP1,GRP2) abs(mean(GRP1)-mean(GRP2))./std([GRP1(:);GRP2(:)]);
-
+test_stat=@(GRP1,GRP2) abs(mean(GRP1)-mean(GRP2))./...
+	((std(GRP1)/sqrt(length(GRP1)))+(std(GRP2)/sqrt(length(GRP2))));
 
 chk=size(GROUP2,2);
 
@@ -32,6 +32,8 @@ idx1n=n1*ncomparisons;
 GROUP2=GROUP2(:);
 idx2=idx2(:);
 idx2n=n2*ncomparisons;
+
+totaln=idx1n+idx2n;
 
 PERM_MAX=zeros(1,nperms);
 P=ones(1,ncomparisons)*NaN;
@@ -57,7 +59,7 @@ parfor i=1:nperms
 
 end
 
-parfor i=1:ncomparisons
+for i=1:ncomparisons
 	TEST_STAT(i)=test_stat(GROUP1(idx1==i),GROUP2(idx2==i));
-	P(i)=mean(PERM_MAX>TEST_STAT(i));
+	P(i)=mean(PERM_MAX>=TEST_STAT(i));
 end
