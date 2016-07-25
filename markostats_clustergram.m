@@ -59,7 +59,7 @@ colors=[1 0 0; 0 1 0; 0 0 0];
 tpoint=xlim();
 tpoint=tpoint(end);
 edgecolor='none';
-
+%ax=findall(gcf,'type','axes');
 set(ax(end),'tickdir','out');
 
 if ~isempty(trials)
@@ -77,11 +77,11 @@ if ~isempty(trials)
 	end
 end
 
-clims=get(gca,'clim');
+%clims=get(gca,'clim');
 pos=get(ax(end),'position');
 set(ax(end),'Position',[pos(1) pos(2)+cbar_dist+cbar_width pos(3) pos(4)-cbar_dist-cbar_width]);
 hc = colorbar('location','southoutside','position',...
-	[pos(1) pos(2) pos(3) cbar_width],'fontsize',10,'xtick',clims);
+	[pos(1) pos(2) pos(3) cbar_width],'fontsize',10);
 
 for i=1:length(ax)
 	i
@@ -91,7 +91,6 @@ end
 
 pos=get(hc,'position');
 set(hc,'position',[pos(1) pos(2) pos(3)-dend_width-dend_dist pos(4)]);
-
 
 linkaxes(ax,'x');
 if ~isempty(data_t)
